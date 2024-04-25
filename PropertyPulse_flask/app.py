@@ -3,6 +3,7 @@
 from flask import Flask, render_template, request, redirect, flash
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin, LoginManager, login_user, logout_user, login_required
+# from PropertyPulse_flask.models import base_model, user
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'  # Change this to a random secret key
@@ -34,7 +35,7 @@ def register():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
-        new_user = User(username=username, password=password)
+        new_user = User(username=username,  password=password)
         db.session.add(new_user)
         db.session.commit()
         flash('User created successfully!', 'success')
@@ -64,6 +65,12 @@ def dashboard():
 def logout():
     logout_user()
     return redirect('/')
+
+
+@app.route('/profile')
+def profile():
+    return render_template('profile.html')
+
 
 if __name__ == '__main__':
     with app.app_context():
