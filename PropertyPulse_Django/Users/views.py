@@ -5,6 +5,8 @@ from .forms import CustomUserCreationForm
 
 def login(requests):
     return render(requests, 'Users/login.html')
+
+
 def register(request):
     if request.method == 'POST':
         form = CustomUserCreationForm(request.POST)
