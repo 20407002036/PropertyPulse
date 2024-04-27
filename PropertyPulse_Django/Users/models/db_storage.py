@@ -6,21 +6,26 @@ Database engine
 import os
 from sqlalchemy import create_engine, MetaData
 from sqlalchemy.orm import sessionmaker, scoped_session
-from models.base_model import Base
-from models import base_model, amenity, city, place, review, state, user
-import models
+# from models.base_model import Base
+# from models import base_model, amenity, city, place, review, state, User
+# import models
+from .users import User
+from .base_model import Base
+# from .Users import models
+# from . import storage
+
 
 class DBStorage:
     """
         handles long term storage of all class instances
     """
     CNC = {
-        'Amenity': amenity.Amenity,
-        'City': city.City,
-        'Place': place.Place,
-        'Review': review.Review,
-        'State': state.State,
-        'User': user.User
+        # 'Amenity': amenity.Amenity,
+        # 'City': city.City,
+        # 'Place': place.Place,
+        # 'Review': review.Review,
+        # 'State': state.State,
+        'User': User
     }
 
     """
@@ -39,8 +44,10 @@ class DBStorage:
                 os.getenv('HBNB_MYSQL_PWD'),
                 os.getenv('HBNB_MYSQL_HOST'),
                 os.getenv('HBNB_MYSQL_DB')))
-        if os.environ.get("HBNB_ENV") == 'test':
-            Base.metadata.drop_all(self.__engine)
+        Session = sessionmaker(bind=self.__engine)
+        self.__session = Session()
+        # if os.environ.get("HBNB_ENV") == 'test':
+        #     Base.metadata.drop_all(self.__engine)
 
     def all(self, cls=None):
         """
@@ -117,21 +124,21 @@ class DBStorage:
         """
         self.__session.remove()
 
-    def get(self, cls, id):
-        """
-            retrieves one object based on class name and id
-        """
-        obj_dict = models.storage.all(cls)
-        for k, v in obj_dict.items():
-            matchstring = cls + '.' + id
-            if k == matchstring:
-                return v
-
-        return None
-
-    def count(self, cls=None):
-        """
-            returns the count of all objects in storage
-        """
-        obj_dict = models.storage.all(cls)
-        return len(obj_dict)
+    # def get(self, cls, id):
+    #     """
+    #         retrieves one object based on class name and id
+    #     """
+    #     obj_dict = storage.all(cls)
+    #     for k, v in obj_dict.items():
+    #         matchstring = cls + '.' + id
+    #         if k == matchstring:
+    #             return v
+    #
+    #     return None
+    #
+    # def count(self, cls=None):
+    #     """
+    #         returns the count of all objects in storage
+    #     """
+    #     obj_dict = storage.all(cls)
+    #     return len(obj_dict)
