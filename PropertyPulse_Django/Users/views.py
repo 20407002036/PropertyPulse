@@ -1,8 +1,8 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
 # from django.contrib.auth.forms import UserCreationForm
-from .models.base_model import BaseModel
-from .models.users import User
+# from .models.base_model import BaseModel
+from .models import Users, Property
 
 def login(requests):
     return render(requests, 'Users/login.html')
@@ -15,7 +15,7 @@ def register(request):
         email = request.POST.get('email')
         password = request.POST.get('password')
         
-        user = User(first_name, second_name, email, password)
+        user = Users(first_name, second_name, email, password)
         user.save()
         
         messages.success(request, 'Account created successfully!')
