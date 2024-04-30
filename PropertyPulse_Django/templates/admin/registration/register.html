@@ -32,7 +32,8 @@
         }
         input[type="text"],
         input[type="email"],
-        input[type="password"] {
+        input[type="password"],
+        input[type="radio"] {
             width: 100%;
             padding: 10px;
             border: 1px solid #ccc;
@@ -59,6 +60,10 @@
         <form action="/register/" method="post">
             {% csrf_token %}
             <div class="form-group">
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+            <div class="form-group">
                 <label for="firstname">First Name:</label>
                 <input type="text" id="firstname" name="firstname" required>
             </div>
@@ -73,6 +78,17 @@
             <div class="form-group">
                 <label for="password">Password:</label>
                 <input type="password" id="password" name="password" required>
+            </div>
+            <div class="form-group">
+                <label for="phonenumber">Phone Number:</label>
+                <input type="text" id="phonenumber" name="phonenumber" required>
+            </div>
+            <div class="form-group">
+                <label for="user_type">User Type:</label><br>
+                <input type="radio" id="tenant" name="usertype" value="tenant" required>
+                <label for="tenant">Tenant</label><br>
+                <input type="radio" id="owner" name="usertype" value="owner" required>
+                <label for="owner">Owner</label><br>
             </div>
             <input type="submit" value="Register">
         </form>
