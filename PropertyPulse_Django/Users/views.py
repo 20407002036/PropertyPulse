@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+
 from django.shortcuts import render, redirect
 from django.contrib import messages
 # from django.contrib.auth.forms import UserCreationForm
@@ -15,12 +17,13 @@ def register(request):
         email = request.POST.get('email')
         password = request.POST.get('password')
         
-        user = Users(first_name, second_name, email, password)
+        user = Users(first_name=first_name, last_name=second_name, email=email, password=password)
+        print(user)
         user.save()
         
         messages.success(request, 'Account created successfully!')
         return redirect('login')
     else:
         # form = UserCreationForm()
-        return render(request, 'Users/register.html')
+        return render(request, 'admin/registration/register.html')
 # removed context var on the render line, {'form': form}
