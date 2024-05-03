@@ -6,6 +6,7 @@ from flask_login import UserMixin, LoginManager, login_user, logout_user, login_
 # from models.base_model import BaseModel, Base
 from models.user import User
 from models.db_storage import DBStorage
+from models.property import Property
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'  # Change this to a random secret key
@@ -21,7 +22,6 @@ db = SQLAlchemy(app)
 
 # Flask-Login Configuration
 login_manager = LoginManager(app)
-
 
 
 @login_manager.user_loader
@@ -53,9 +53,11 @@ def login():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
+        print(username)
         user = DBStorage.authenticate_user(DBStorage(), username, password)
 
         # ObjUser = User(username, password)
+
 
         if user:
             # user.is_active = True
@@ -70,10 +72,8 @@ def login():
 @app.route('/dashboard')
 @login_required
 def dashboard():
-    context = {
-        'user': User.username
-    }
-    return render_template('dashboard.html', **context)
+
+    return render_template('dashboard.html')
 
 
 @app.route('/logout')
@@ -84,11 +84,43 @@ def logout():
 
 @app.route('/profile')
 def profile():
-    return render_template('profile.html')
+    info = {
+        'Name': "Shoku",
+        'Email': "Shoku@home.com",
+    }
+    return render_template('profile.html', **info)
 
 
-@app.route('/create_property')
+@app.route('/create_property', methods=['GET', 'POST'])
+@login_required
 def create_property():
+    if request.method == 'POST':
+        name = request.form['name']
+        address = request.form['address']
+        description = request.form['description']
+        rent_price = request.form['rent_price']
+        num_bedrooms = request.form['num_bedrooms']
+        num_bathrooms = request.form['num_bathrooms']
+        size_sqft = request.form['size_sqft']
+        amenities = request.form['amenities']
+        availability_status = request.form['availability_status']
+        contact_email = request.form['contact_email']
+
+        new_property = Property(name=name,
+                                address=address,
+                                description=description,
+                                rent_price=rent_price,
+                                num_bedrooms=num_bedrooms,
+                                num_bathrooms=num_bathrooms,
+                                size_sqft=size_sqft,
+                                amenities=amenities,
+                                availability_status=availability_status,
+                                contact_email=contact_email
+                                )
+        db.session.add(new_property)
+        db.session.commit()
+        #new_property.save()
+
     return render_template('create_property.html')
 
 

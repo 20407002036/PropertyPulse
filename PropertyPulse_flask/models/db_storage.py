@@ -8,6 +8,7 @@ from sqlalchemy import create_engine, MetaData
 from sqlalchemy.orm import sessionmaker, scoped_session
 import models
 from .user import User
+from .property import Property
 # from .base_model import Base
 from hashlib import md5
 
@@ -26,7 +27,8 @@ class DBStorage:
         # 'Place': place.Place,
         # 'Review': review.Review,
         # 'State': state.State,
-        'User': User
+        'User': User,
+        'Property': Property
     }
 
     """
