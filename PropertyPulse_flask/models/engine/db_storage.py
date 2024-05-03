@@ -6,9 +6,13 @@ Database engine
 import os
 from sqlalchemy import create_engine, MetaData
 from sqlalchemy.orm import sessionmaker, scoped_session
-from PropertyPulse_flask.models.base_model import Base
-from PropertyPulse_flask.models import base_model, user
-import PropertyPulse_flask.models
+import models
+from ..user import User
+from ..base_model import Base
+
+
+# from .Users import models
+# from . import storage
 
 
 class DBStorage:
@@ -16,7 +20,12 @@ class DBStorage:
         handles long term storage of all class instances
     """
     CNC = {
-        'User': user.User
+        # 'Amenity': amenity.Amenity,
+        # 'City': city.City,
+        # 'Place': place.Place,
+        # 'Review': review.Review,
+        # 'State': state.State,
+        'User': User
     }
 
     """
@@ -31,12 +40,14 @@ class DBStorage:
         """
         self.__engine = create_engine(
             'mysql+mysqldb://{}:{}@{}/{}'.format(
-                os.environ.get('HBNB_MYSQL_USER'),
-                os.environ.get('HBNB_MYSQL_PWD'),
-                os.environ.get('HBNB_MYSQL_HOST'),
-                os.environ.get('HBNB_MYSQL_DB')))
-        if os.environ.get("HBNB_ENV") == 'test':
-            Base.metadata.drop_all(self.__engine)
+                os.getenv('MYSQL_USER'),
+                os.getenv('MYSQL_PWD'),
+                os.getenv('MYSQL_HOST'),
+                os.getenv('MYSQL_DB')))
+        Session = sessionmaker(bind=self.__engine)
+        self.__session = Session()
+        # if os.environ.get("HBNB_ENV") == 'test':
+        #     Base.metadata.drop_all(self.__engine)
 
     def all(self, cls=None):
         """

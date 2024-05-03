@@ -3,7 +3,8 @@
 from flask import Flask, render_template, request, redirect, flash
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin, LoginManager, login_user, logout_user, login_required
-# from PropertyPulse_flask.models import base_model, user
+from models.base_model import BaseModel, Base
+from models.user import User
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'  # Change this to a random secret key
@@ -12,10 +13,10 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'
 db = SQLAlchemy(app)
 
 # User Model
-class User(db.Model, UserMixin):
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(50), unique=True, nullable=False)
-    password = db.Column(db.String(100), nullable=False)
+# class User(db.Model, UserMixin):
+#     id = db.Column(db.Integer, primary_key=True)
+#     username = db.Column(db.String(50), unique=True, nullable=False)
+#     password = db.Column(db.String(100), nullable=False)
 
 # Flask-Login Configuration
 login_manager = LoginManager()
@@ -54,12 +55,15 @@ def login():
             return redirect('/dashboard')
         else:
             flash('Invalid username or password', 'error')
-    return render_template('register.html')
+    return render_template('login.html')
 
 @app.route('/dashboard')
 @login_required
 def dashboard():
-    return render_template('dashboard.html')
+    context = {
+        'user': User.username
+    }
+    return render_template('dashboard.html', **context)
 
 @app.route('/logout')
 def logout():
@@ -70,6 +74,10 @@ def logout():
 @app.route('/profile')
 def profile():
     return render_template('profile.html')
+
+@app.route('/create_property')
+def create_property():
+    return render_template('create_property.html')
 
 
 if __name__ == '__main__':

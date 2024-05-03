@@ -2,7 +2,7 @@
 """
 This method creates an instance of the FileStorage class for managing data.
 """
-from models.engine.file_storage import FileStorage
+from engine.db_storage import DBStorage
 
-storage = FileStorage()
+storage = DBStorage()
 storage.reload()
