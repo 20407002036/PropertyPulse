@@ -7,8 +7,9 @@ import os
 from sqlalchemy import create_engine, MetaData
 from sqlalchemy.orm import sessionmaker, scoped_session
 import models
-from ..user import User
-from ..base_model import Base
+from .user import User
+# from .base_model import Base
+from hashlib import md5
 
 
 # from .Users import models
@@ -112,7 +113,7 @@ class DBStorage:
         """
            creates all tables in database & session from engine
         """
-        Base.metadata.create_all(self.__engine)
+        # Base.metadata.create_all(self.__engine)
         self.__session = scoped_session(
             sessionmaker(
                 bind=self.__engine,
@@ -128,13 +129,10 @@ class DBStorage:
         """
             retrieves one object based on class name and id
         """
-        obj_dict = models.storage.all(cls)
-        for k, v in obj_dict.items():
-            matchstring = cls + '.' + id
-            if k == matchstring:
-                return v
+        query = self.__session.query(cls).filter_by(id=id)
 
-        return None
+        obj = query.first()
+        return obj
 
     def count(self, cls=None):
         """
@@ -142,3 +140,12 @@ class DBStorage:
         """
         obj_dict = models.storage.all(cls)
         return len(obj_dict)
+    @staticmethod
+    def authenticate_user(self, username, password):
+        user = self.__session.query(User).filter(User.username == username, User.password == md5(password.encode()).hexdigest()).first()
+
+        if user:
+            return user
+        else:
+            print("None")
+            return None

@@ -2,17 +2,46 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Create Property</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Property Form</title>
 </head>
 <body>
-<header> Create Property </header>
-<h3> This is the Owner space to bring to life your Property </h3>
+    <h2>Property Form</h2>
+    <form action="/submit_property" method="post">
+        <label for="name">Name:</label><br>
+        <input type="text" id="name" name="name"><br><br>
 
-    <form method="post">
-       <br> Name <input type="text" name="property_name" required>
-        <br> Property Description <input type="text" required>
-        <button type="submit">Create</button>
+        <label for="address">Address:</label><br>
+        <input type="text" id="address" name="address"><br><br>
+
+        <label for="description">Description:</label><br>
+        <textarea id="description" name="description" rows="4" cols="50"></textarea><br><br>
+
+        <label for="rent_price">Rent Price:</label><br>
+        <input type="text" id="rent_price" name="rent_price"><br><br>
+
+        <label for="num_bedrooms">Number of Bedrooms:</label><br>
+        <input type="number" id="num_bedrooms" name="num_bedrooms"><br><br>
+
+        <label for="num_bathrooms">Number of Bathrooms:</label><br>
+        <input type="number" id="num_bathrooms" name="num_bathrooms"><br><br>
+
+        <label for="size_sqft">Size (sqft):</label><br>
+        <input type="number" id="size_sqft" name="size_sqft"><br><br>
+
+        <label for="amenities">Amenities:</label><br>
+        <input type="text" id="amenities" name="amenities"><br><br>
+
+        <label for="availability_status">Availability Status:</label><br>
+        <select id="availability_status" name="availability_status">
+            <option value="available">Available</option>
+            <option value="rented">Rented</option>
+        </select><br><br>
+
+        <label for="contact_email">Contact Email:</label><br>
+        <input type="email" id="contact_email" name="contact_email"><br><br>
+
+        <input type="submit" value="Submit">
     </form>
-
 </body>
 </html>

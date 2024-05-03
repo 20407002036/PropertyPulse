@@ -3,12 +3,13 @@
 from flask import Flask, render_template, request, redirect, flash
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin, LoginManager, login_user, logout_user, login_required
-from models.base_model import BaseModel, Base
+# from models.base_model import BaseModel, Base
 from models.user import User
+from models.db_storage import DBStorage
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'  # Change this to a random secret key
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:10229101151@localhost:3306/flask_property_pulse'
 
 db = SQLAlchemy(app)
 
@@ -19,43 +20,52 @@ db = SQLAlchemy(app)
 #     password = db.Column(db.String(100), nullable=False)
 
 # Flask-Login Configuration
-login_manager = LoginManager()
-login_manager.init_app(app)
+login_manager = LoginManager(app)
+
+
 
 @login_manager.user_loader
 def load_user(user_id):
-    return User.query.get(int(user_id))
+    return DBStorage.get(DBStorage(), User, user_id)
+
 
 # Routes
 @app.route('/')
 def index():
     return render_template('index.html')
 
+
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
-        new_user = User(username=username,  password=password)
-        db.session.add(new_user)
-        db.session.commit()
+        email = request.form['email']
+        new_user = User(username=username, email=email, password=password)
+        new_user.save()
         flash('User created successfully!', 'success')
         return redirect('/login')
     return render_template('register.html')
+
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
-        user = User.query.filter_by(username=username).first()
-        if user and user.password == password:
+        user = DBStorage.authenticate_user(DBStorage(), username, password)
+
+        # ObjUser = User(username, password)
+
+        if user:
+            # user.is_active = True
             login_user(user)
             flash('Logged in successfully!', 'success')
             return redirect('/dashboard')
         else:
             flash('Invalid username or password', 'error')
     return render_template('login.html')
+
 
 @app.route('/dashboard')
 @login_required
@@ -64,6 +74,7 @@ def dashboard():
         'user': User.username
     }
     return render_template('dashboard.html', **context)
+
 
 @app.route('/logout')
 def logout():
@@ -75,6 +86,7 @@ def logout():
 def profile():
     return render_template('profile.html')
 
+
 @app.route('/create_property')
 def create_property():
     return render_template('create_property.html')
@@ -82,5 +94,4 @@ def create_property():
 
 if __name__ == '__main__':
     with app.app_context():
-        db.create_all()
         app.run(debug=True)
