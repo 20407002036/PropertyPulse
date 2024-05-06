@@ -4,15 +4,12 @@ Contains class BaseModel
 """
 
 from datetime import datetime
-import models
+from .storage import storage
 from os import getenv
 import sqlalchemy
 from sqlalchemy import Column, String, DateTime
 from sqlalchemy.ext.declarative import declarative_base
 import uuid
-
-# from . import storage
-
 
 
 time = "%Y-%m-%dT%H:%M:%S.%f"
@@ -43,10 +40,6 @@ class BaseModel:
                 self.updated_at = datetime.utcnow()
             if kwargs.get("id", None) is None:
                 self.id = str(uuid.uuid4())
-        else:
-            self.id = str(uuid.uuid4())
-            self.created_at = datetime.utcnow()
-            self.updated_at = self.created_at
 
     def __str__(self):
         """String representation of the BaseModel class"""
@@ -57,8 +50,8 @@ class BaseModel:
         """updates the attribute 'updated_at' with the current datetime"""
 
         self.updated_at = datetime.utcnow()
-        models.storage.new(self)
-        models.storage.save()
+        storage.new(self)
+        storage.save()
 
     def to_dict(self, save_fs=None):
         """returns a dictionary containing all keys/values of the instance"""
@@ -77,4 +70,4 @@ class BaseModel:
 
     def delete(self):
         """delete the current instance from the storage"""
-        models.storage.delete(self)
+        storage.delete(self)

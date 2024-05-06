@@ -6,15 +6,9 @@ Database engine
 import os
 from sqlalchemy import create_engine, MetaData
 from sqlalchemy.orm import sessionmaker, scoped_session
-import models
-from .user import User
-from .property import Property
-# from .base_model import Base
+# from .user import User
+# from .property import Property
 from hashlib import md5
-
-
-# from .Users import models
-# from . import storage
 
 
 class DBStorage:
@@ -27,8 +21,8 @@ class DBStorage:
         # 'Place': place.Place,
         # 'Review': review.Review,
         # 'State': state.State,
-        'User': User,
-        'Property': Property
+        # 'User': User,
+        # 'Property': Property
     }
 
     """
@@ -49,8 +43,6 @@ class DBStorage:
                 os.getenv('MYSQL_DB')))
         Session = sessionmaker(bind=self.__engine)
         self.__session = Session()
-        # if os.environ.get("HBNB_ENV") == 'test':
-        #     Base.metadata.drop_all(self.__engine)
 
     def all(self, cls=None):
         """
@@ -140,14 +132,15 @@ class DBStorage:
         """
             returns the count of all objects in storage
         """
-        obj_dict = models.storage.all(cls)
-        return len(obj_dict)
-    @staticmethod
-    def authenticate_user(self, username, password):
-        user = self.__session.query(User).filter(User.username == username, User.password == md5(password.encode()).hexdigest()).first()
+        pass
+        # obj_dict = models.storage.all(cls)
+        # return len(obj_dict)
+    # @staticmethod
+    # def authenticate_user(self, username, password):
+    #     user = self.__session.query(User).filter(User.username == username, User.password == md5(password.encode()).hexdigest()).first()
 
-        if user:
-            return user
-        else:
-            print("None")
-            return None
+    #     if user:
+    #         return user
+    #     else:
+    #         print("None")
+    #         return None

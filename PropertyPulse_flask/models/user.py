@@ -1,10 +1,10 @@
 #!/usr/bin/python3
 """ holds class User"""
 
-import models
+# import models
 from .base_model import BaseModel, Base
-from os import getenv
-import sqlalchemy
+# from os import getenv
+# import sqlalchemy
 from sqlalchemy import Column, String
 from sqlalchemy.orm import relationship
 from hashlib import md5
@@ -16,13 +16,14 @@ class User(BaseModel, Base, UserMixin):
     """Representation of a user """
 
     __tablename__ = 'users'
+
     username = Column(String(128), nullable=False)
     email = Column(String(128), nullable=False)
     password = Column(String(128), nullable=False)
     first_name = Column(String(128), nullable=True)
     last_name = Column(String(128), nullable=True)
-    # places = relationship("Place", backref="user")
-    # reviews = relationship("Review", backref="user")
+
+    properties = relationship('Property', back_populates='user')
 
     def __init__(self, *args, **kwargs):
         """initializes user"""
@@ -33,6 +34,6 @@ class User(BaseModel, Base, UserMixin):
         if name == "password":
             value = md5(value.encode()).hexdigest()
         super().__setattr__(name, value)
-    
+
     def get_id(self):
         return self.id

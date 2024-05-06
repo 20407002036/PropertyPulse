@@ -4,9 +4,11 @@ from flask import Flask, render_template, request, redirect, flash
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin, LoginManager, login_user, logout_user, login_required
 # from models.base_model import BaseModel, Base
-from models.user import User
-from models.db_storage import DBStorage
-from models.property import Property
+from .models.user import User
+from .models.db_storage import DBStorage
+from .models.property import Property
+from flask_migrate import Migrate
+
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'  # Change this to a random secret key
@@ -14,6 +16,10 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:10229101151@localhost:3306
 
 db = SQLAlchemy(app)
 
+
+# try make migrations to the db
+# migrate = Migrate(app, db)
+           
 # User Model
 # class User(db.Model, UserMixin):
 #     id = db.Column(db.Integer, primary_key=True)
@@ -42,6 +48,7 @@ def register():
         password = request.form['password']
         email = request.form['email']
         new_user = User(username=username, email=email, password=password)
+        print(new_user)
         new_user.save()
         flash('User created successfully!', 'success')
         return redirect('/login')
@@ -92,7 +99,6 @@ def profile():
 
 
 @app.route('/create_property', methods=['GET', 'POST'])
-@login_required
 def create_property():
     if request.method == 'POST':
         name = request.form['name']
@@ -117,10 +123,14 @@ def create_property():
                                 availability_status=availability_status,
                                 contact_email=contact_email
                                 )
-        db.session.add(new_property)
-        db.session.commit()
-        #new_property.save()
 
+        new_property.save()
+
+        print(new_property.to_dict())
+        if new_property:
+            return redirect('/profile')
+        else:
+            flash('Error creating the property')
     return render_template('create_property.html')
 
 
