@@ -1,4 +1,5 @@
-from .base_model import BaseModel, Base
+from .base_model import BaseModel
+from .storage import Base
 # from .user import User
 # from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship

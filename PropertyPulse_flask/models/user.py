@@ -2,7 +2,8 @@
 """ holds class User"""
 
 # import models
-from .base_model import BaseModel, Base
+from .base_model import BaseModel
+from .storage import Base
 # from os import getenv
 # import sqlalchemy
 from sqlalchemy import Column, String
@@ -24,6 +25,7 @@ class User(BaseModel, Base, UserMixin):
     last_name = Column(String(128), nullable=True)
 
     properties = relationship('Property', back_populates='user')
+    reviews = relationship('Review', back_populates='user')
 
     def __init__(self, *args, **kwargs):
         """initializes user"""
@@ -37,3 +39,14 @@ class User(BaseModel, Base, UserMixin):
 
     def get_id(self):
         return self.id
+    
+    
+    @staticmethod
+    def authenticate_user(self, username, password):
+        user = self.__session.query(User).filter(User.username == username, User.password == md5(password.encode()).hexdigest()).first()
+
+        if user:
+            return user
+        else:
+            print("None")
+            return None

@@ -1,13 +1,14 @@
 #!/usr/bin/python3
 
+
 from flask import Flask, render_template, request, redirect, flash
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin, LoginManager, login_user, logout_user, login_required
-# from models.base_model import BaseModel, Base
-from .models.user import User
-from .models.db_storage import DBStorage
-from .models.property import Property
+from models.user import User
+from models.property import Property
+from models.reviews import Review
 from flask_migrate import Migrate
+from models.db_storage import DBStorage
 
 
 app = Flask(__name__)
@@ -61,7 +62,7 @@ def login():
         username = request.form['username']
         password = request.form['password']
         print(username)
-        user = DBStorage.authenticate_user(DBStorage(), username, password)
+        user = User.authenticate_user(User(), username, password)
 
         # ObjUser = User(username, password)
 
@@ -133,6 +134,26 @@ def create_property():
             flash('Error creating the property')
     return render_template('create_property.html')
 
+
+@app.route('/review', methods=['POST', 'GET'])
+@login_required
+def test():
+    if request.method == 'POST':
+        rental = request.form['rental']
+        review = request.form['review']
+        
+        
+        new_review = Review(rental=rental,
+                            reviewTxt=review
+                            )
+
+        new_review.save()
+
+        print(new_review.to_dict())
+        print(rental)
+        
+        
+    return render_template('review.html')
 
 if __name__ == '__main__':
     with app.app_context():

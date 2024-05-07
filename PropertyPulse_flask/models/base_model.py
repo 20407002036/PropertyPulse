@@ -4,17 +4,15 @@ Contains class BaseModel
 """
 
 from datetime import datetime
-from .storage import storage
+from .storage import storage, Base
 from os import getenv
 import sqlalchemy
 from sqlalchemy import Column, String, DateTime
-from sqlalchemy.ext.declarative import declarative_base
 import uuid
 
 
 time = "%Y-%m-%dT%H:%M:%S.%f"
 
-Base = declarative_base()
 
 
 class BaseModel:

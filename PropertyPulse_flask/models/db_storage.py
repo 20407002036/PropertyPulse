@@ -3,13 +3,18 @@
 Database engine
 """
 
+# from .base_model import Base
 import os
 from sqlalchemy import create_engine, MetaData
 from sqlalchemy.orm import sessionmaker, scoped_session
+from sqlalchemy.ext.declarative import declarative_base
+from dotenv import load_dotenv
 # from .user import User
 # from .property import Property
 from hashlib import md5
 
+
+Base = declarative_base()
 
 class DBStorage:
     """
@@ -35,14 +40,19 @@ class DBStorage:
         """
             creates the engine self.__engine
         """
+        
+        load_dotenv()
+        
         self.__engine = create_engine(
             'mysql+mysqldb://{}:{}@{}/{}'.format(
                 os.getenv('MYSQL_USER'),
                 os.getenv('MYSQL_PWD'),
                 os.getenv('MYSQL_HOST'),
                 os.getenv('MYSQL_DB')))
-        Session = sessionmaker(bind=self.__engine)
-        self.__session = Session()
+        
+        
+        # Session = sessionmaker(bind=self.__engine)
+        # self.__session = Session()
 
     def all(self, cls=None):
         """
@@ -107,11 +117,10 @@ class DBStorage:
         """
            creates all tables in database & session from engine
         """
-        # Base.metadata.create_all(self.__engine)
-        self.__session = scoped_session(
-            sessionmaker(
-                bind=self.__engine,
-                expire_on_commit=False))
+        Base.metadata.create_all(self.__engine)
+        sess_factory = sessionmaker(bind=self.__engine, expire_on_commit=False)
+        Session = scoped_session(sess_factory)
+        self.__session = Session()
 
     def close(self):
         """
@@ -135,12 +144,4 @@ class DBStorage:
         pass
         # obj_dict = models.storage.all(cls)
         # return len(obj_dict)
-    # @staticmethod
-    # def authenticate_user(self, username, password):
-    #     user = self.__session.query(User).filter(User.username == username, User.password == md5(password.encode()).hexdigest()).first()
-
-    #     if user:
-    #         return user
-    #     else:
-    #         print("None")
-    #         return None
+   
