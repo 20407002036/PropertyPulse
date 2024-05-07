@@ -13,7 +13,7 @@ from models.db_storage import DBStorage
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'  # Change this to a random secret key
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:10229101151@localhost:3306/flask_property_pulse'
+app.config['SQLALCHEMY_DATABASE_URI']
 
 db = SQLAlchemy(app)
 
