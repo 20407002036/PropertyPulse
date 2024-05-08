@@ -3,7 +3,7 @@ from .storage import Base
 # from .user import User
 # from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
-from sqlalchemy import Column, String, Text, Integer, ForeignKey
+from sqlalchemy import Column, String, Text, Integer, ForeignKey, Enum, DECIMAL
 
 # Base = declarative_base()
 
@@ -17,19 +17,16 @@ class Property(BaseModel, Base):
     name = Column(String(128), nullable=False)
     address = Column(String(128), nullable=False)
     description = Column(Text, nullable=True)
+    rent_price = Column(DECIMAL(10, 2))
     num_bedrooms = Column(Integer, nullable=False)
     num_bathrooms = Column(Integer, nullable=False)
     size_sqft = Column(Integer, nullable=False)
     amenities = Column(String, nullable=True)
-    status = [
-        ('Available', 'Available'),
-        ('Rented', 'Rented'),
-    ]
-    availability_status = Column(String, info=status, nullable=False)
+    
+    availability_status = Column(Enum('available', 'rented'), default='available')
     user_id = Column(String(128), ForeignKey('users.id'), nullable=False)
     contact_email = Column(String(128), nullable=False)
 
-    user = relationship('User', back_populates='properties')
 
     def __init__(self, *args, **kwargs):
         """Init for the class property"""

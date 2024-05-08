@@ -24,8 +24,8 @@ class User(BaseModel, Base, UserMixin):
     first_name = Column(String(128), nullable=True)
     last_name = Column(String(128), nullable=True)
 
-    properties = relationship('Property', back_populates='user')
-    reviews = relationship('Review', back_populates='user')
+    properties = relationship('Property', backref='user')
+    
 
     def __init__(self, *args, **kwargs):
         """initializes user"""
@@ -41,12 +41,3 @@ class User(BaseModel, Base, UserMixin):
         return self.id
     
     
-    @staticmethod
-    def authenticate_user(self, username, password):
-        user = self.__session.query(User).filter(User.username == username, User.password == md5(password.encode()).hexdigest()).first()
-
-        if user:
-            return user
-        else:
-            print("None")
-            return None
