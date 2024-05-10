@@ -56,8 +56,18 @@
     </nav>
     <section class="container">
         <div class="card">
-            <h2>Welcome User</h2>
-            <p>This is your dashboard. You can view your profile, update settings, and perform other actions here.</p>
+            <h2>Properties</h2>
+            <p>
+                <ul>
+                    {% for key, property in properties.items() %}
+                        <li>
+                            <strong>ID:</strong> {{ property.id }} <br>
+                            <strong>Name:</strong> {{ property.name }} <br>
+                            <strong>Address:</strong> {{ property.address }} <br>
+                            <!-- Add more property details here -->
+                        </li>
+                    {% endfor %}
+            </p>
         </div>
         <div class="card">
             <h2>Recent Activity</h2>

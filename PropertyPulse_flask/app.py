@@ -3,24 +3,22 @@
 
 from flask import Flask, render_template, request, redirect, flash
 from flask_sqlalchemy import SQLAlchemy
-from flask_login import UserMixin, LoginManager, login_user, logout_user, login_required
+from flask_login import UserMixin, LoginManager, login_user, logout_user, login_required, current_user
 from models.user import User
 from models.property import Property
 from models.reviews import Review
 from flask_migrate import Migrate
 from models.db_storage import DBStorage
 
-
 app = Flask(__name__)
-app.secret_key = 'your_secret_key'  # Change this to a random secret key
-app.config['SQLALCHEMY_DATABASE_URI']
+app.secret_key = 'your_secret_key'
+# app.config['SQLALCHEMY_DATABASE_URI']
 
-db = SQLAlchemy(app)
-
+# db = SQLAlchemy(app)
 
 # try make migrations to the db
 # migrate = Migrate(app, db)
-           
+
 # User Model
 # class User(db.Model, UserMixin):
 #     id = db.Column(db.Integer, primary_key=True)
@@ -62,10 +60,9 @@ def login():
         username = request.form['username']
         password = request.form['password']
         print(username)
-        user = User.authenticate_user(User(), username, password)
+        user = DBStorage.authenticate_user(DBStorage(), username, password)
 
         # ObjUser = User(username, password)
-
 
         if user:
             # user.is_active = True
@@ -80,8 +77,9 @@ def login():
 @app.route('/dashboard')
 @login_required
 def dashboard():
-
-    return render_template('dashboard.html')
+    properties = DBStorage().all_properties()
+    
+    return render_template('dashboard.html', properties=properties)
 
 
 @app.route('/logout')
@@ -91,12 +89,14 @@ def logout():
 
 
 @app.route('/profile')
+@login_required
 def profile():
-    info = {
-        'Name': "Shoku",
-        'Email': "Shoku@home.com",
-    }
-    return render_template('profile.html', **info)
+    
+    user_id = current_user.id
+    username = current_user.username
+    email = current_user.email
+    
+    return render_template('profile.html', user_id=user_id, username=username, email=email)
 
 
 @app.route('/create_property', methods=['GET', 'POST'])
@@ -125,7 +125,9 @@ def create_property():
                                 contact_email=contact_email
                                 )
 
-        new_property.save()
+        DBStorage.new(DBStorage(), new_property)
+        DBStorage.save()
+    
 
         print(new_property.to_dict())
         if new_property:
@@ -141,8 +143,7 @@ def test():
     if request.method == 'POST':
         rental = request.form['rental']
         review = request.form['review']
-        
-        
+
         new_review = Review(rental=rental,
                             reviewTxt=review
                             )
@@ -151,9 +152,9 @@ def test():
 
         print(new_review.to_dict())
         print(rental)
-        
-        
+
     return render_template('review.html')
+
 
 if __name__ == '__main__':
     with app.app_context():
