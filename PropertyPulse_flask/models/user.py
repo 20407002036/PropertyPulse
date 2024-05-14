@@ -4,15 +4,13 @@
 # import models
 from .base_model import BaseModel
 from .storage import Base
-# from os import getenv
-# import sqlalchemy
 from sqlalchemy import Column, String
 from sqlalchemy.orm import relationship
 from hashlib import md5
 from flask_login import UserMixin
 
 
-# removed Base from the inherit bracket
+
 class User(BaseModel, Base, UserMixin):
     """Representation of a user """
 
@@ -24,6 +22,7 @@ class User(BaseModel, Base, UserMixin):
     first_name = Column(String(128), nullable=True)
     last_name = Column(String(128), nullable=True)
 
+    # Relationshot btwn properties and users table
     properties = relationship('Property', backref='user')
     
 

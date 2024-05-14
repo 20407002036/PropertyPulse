@@ -19,11 +19,6 @@ app.secret_key = 'your_secret_key'
 # try make migrations to the db
 # migrate = Migrate(app, db)
 
-# User Model
-# class User(db.Model, UserMixin):
-#     id = db.Column(db.Integer, primary_key=True)
-#     username = db.Column(db.String(50), unique=True, nullable=False)
-#     password = db.Column(db.String(100), nullable=False)
 
 # Flask-Login Configuration
 login_manager = LoginManager(app)
@@ -62,10 +57,8 @@ def login():
         print(username)
         user = DBStorage.authenticate_user(DBStorage(), username, password)
 
-        # ObjUser = User(username, password)
 
         if user:
-            # user.is_active = True
             login_user(user)
             flash('Logged in successfully!', 'success')
             return redirect('/dashboard')
