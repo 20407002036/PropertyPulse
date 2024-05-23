@@ -24,6 +24,9 @@ class User(BaseModel, Base, UserMixin):
 
     # Relationshot btwn properties and users table
     properties = relationship('Property', backref='user')
+
+    # One to many relationship with reviews
+    reviews = relationship('Review', backref='user')
     
 
     def __init__(self, *args, **kwargs):

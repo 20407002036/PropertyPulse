@@ -18,7 +18,12 @@ if config.config_file_name is not None:
 # for 'autogenerate' support
 # from myapp import mymodel
 # target_metadata = mymodel.Base.metadata
-target_metadata = None
+from models.user import User as UserBase
+from models.property import Property as PropertyBase
+from models.reviews import Review as ReviewsBase
+
+# Combine the models metadata
+target_metadata = [UserBase.metadata, PropertyBase.metadata, ReviewsBase.metadata]
 
 # other values from the config, defined by the needs of env.py,
 # can be acquired:

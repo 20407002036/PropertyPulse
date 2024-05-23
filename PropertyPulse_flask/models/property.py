@@ -21,7 +21,7 @@ class Property(BaseModel, Base):
     num_bedrooms = Column(Integer, nullable=False)
     num_bathrooms = Column(Integer, nullable=False)
     size_sqft = Column(Integer, nullable=False)
-    amenities = Column(String, nullable=True)
+    amenities = Column(String(128), nullable=True)
     
     availability_status = Column(Enum('available', 'rented'), default='available')
     user_id = Column(String(128), ForeignKey('users.id'), nullable=False)
@@ -35,5 +35,4 @@ class Property(BaseModel, Base):
 
     def __setattr__(self, name, value):
 
-        pass
-    
+        super().__setattr__(name, value)

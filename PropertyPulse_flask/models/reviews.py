@@ -11,7 +11,7 @@ class Review(BaseModel, Base):
 
     rental = Column(String(128), nullable=False)
     reviewTxt = Column(Text, nullable=False)
-    user_id = Column(String(128), ForeignKey('user.id', ondelete='CASCADE'), nullable=False)
+    user_id = Column(String(128), ForeignKey('users.id', ondelete='CASCADE'), nullable=False)
 
     
 

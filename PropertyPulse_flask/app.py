@@ -93,6 +93,7 @@ def profile():
 
 
 @app.route('/create_property', methods=['GET', 'POST'])
+
 def create_property():
     if request.method == 'POST':
         name = request.form['name']
@@ -118,8 +119,10 @@ def create_property():
                                 contact_email=contact_email
                                 )
 
-        DBStorage.new(DBStorage(), new_property)
-        DBStorage.save()
+
+        db_storage = DBStorage()
+        # DBStorage.new(DBStorage(), new_property)
+        db_storage.save()
     
 
         print(new_property.to_dict())
