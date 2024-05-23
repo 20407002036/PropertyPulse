@@ -9,6 +9,7 @@ from models.property import Property
 from models.reviews import Review
 from flask_migrate import Migrate
 from models.db_storage import DBStorage
+from flask import session
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'
@@ -70,7 +71,10 @@ def login():
 @app.route('/dashboard')
 @login_required
 def dashboard():
-    properties = DBStorage().all_properties()
+    db_storage = DBStorage()
+    properties = db_storage.all_properties()
+
+    print(properties)
     
     return render_template('dashboard.html', properties=properties)
 
@@ -106,6 +110,10 @@ def create_property():
         amenities = request.form['amenities']
         availability_status = request.form['availability_status']
         contact_email = request.form['contact_email']
+        # Get the user_id from the user in session
+        username = session.get('username')
+
+        print(f'This is the username {username}')
 
         new_property = Property(name=name,
                                 address=address,
@@ -116,13 +124,14 @@ def create_property():
                                 size_sqft=size_sqft,
                                 amenities=amenities,
                                 availability_status=availability_status,
+                                user_id= current_user.id,
                                 contact_email=contact_email
                                 )
 
-
-        db_storage = DBStorage()
+        new_property.save()
+        # db_storage = DBStorage()
         # DBStorage.new(DBStorage(), new_property)
-        db_storage.save()
+        # db_storage.save()
     
 
         print(new_property.to_dict())

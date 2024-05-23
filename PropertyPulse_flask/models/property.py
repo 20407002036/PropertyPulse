@@ -5,8 +5,6 @@ from .storage import Base
 from sqlalchemy.orm import relationship
 from sqlalchemy import Column, String, Text, Integer, ForeignKey, Enum, DECIMAL
 
-# Base = declarative_base()
-
 
 class Property(BaseModel, Base):
     """

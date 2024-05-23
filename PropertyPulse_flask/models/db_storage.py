@@ -155,7 +155,7 @@ class DBStorage:
          
         obj_dict = {}
         # Query all objects from the Property table
-        a_query = self.__session.query(User)
+        a_query = self.__session.query(Property)
         for prop in a_query:
             obj_ref = f"{type(prop).__name__}.{prop.id}"
             obj_dict[obj_ref] = prop

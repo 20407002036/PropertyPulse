@@ -59,11 +59,12 @@
             <h2>Properties</h2>
             <p>
                 <ul>
-                    {% for key, property in properties.items() %}
+                    {% for property_ref, property in properties.items() %}
                         <li>
                             <strong>ID:</strong> {{ property.id }} <br>
                             <strong>Name:</strong> {{ property.name }} <br>
                             <strong>Address:</strong> {{ property.address }} <br>
+                            <strong>Description:</strong> {{ property.description}}
                             <!-- Add more property details here -->
                         </li>
                     {% endfor %}
