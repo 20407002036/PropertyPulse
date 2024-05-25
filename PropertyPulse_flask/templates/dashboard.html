@@ -37,10 +37,18 @@
             margin: auto;
         }
         .card {
+            background-color: #f4f4f4cb;
+            border-radius: 5px;
+            padding: 20px;
+            margin-bottom: 20px;
+
+        }
+        .property-card {
             background-color: #f4f4f4;
             border-radius: 5px;
             padding: 20px;
             margin-bottom: 20px;
+            display: flex;
         }
     </style>
 </head>
@@ -55,18 +63,20 @@
         <a href="login">Logout</a>
     </nav>
     <section class="container">
-        <div class="card">
+        <div class="property-card">
             <h2>Properties</h2>
             <p>
                 <ul>
                     {% for property_ref, property in properties.items() %}
-                        <li>
-                            <strong>ID:</strong> {{ property.id }} <br>
-                            <strong>Name:</strong> {{ property.name }} <br>
-                            <strong>Address:</strong> {{ property.address }} <br>
-                            <strong>Description:</strong> {{ property.description}}
-                            <!-- Add more property details here -->
-                        </li>
+                    <div class="card">
+                        
+                        <strong>ID:</strong> {{ property.id }} <br>
+                        <strong>Name:</strong> {{ property.name }} <br>
+                        <strong>Address:</strong> {{ property.address }} <br>
+                        <strong>Description:</strong> {{ property.description}}
+                        <!-- Add more property details here -->
+                
+                    </div>
                     {% endfor %}
             </p>
         </div>

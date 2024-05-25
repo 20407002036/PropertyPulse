@@ -155,11 +155,11 @@ class DBStorage:
          
         obj_dict = {}
         # Query all objects from the Property table
-        a_query = self.__session.query(Property)
+        a_query = self.__session.query(Property).all()
         for prop in a_query:
             obj_ref = f"{type(prop).__name__}.{prop.id}"
             obj_dict[obj_ref] = prop
-            return obj_dict
+        return obj_dict
 
     @staticmethod
     def authenticate_user(self, username, password):
