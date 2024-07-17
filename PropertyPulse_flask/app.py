@@ -1,6 +1,4 @@
 #!/usr/bin/python3
-
-
 from flask import Flask, render_template, request, redirect, flash
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin, LoginManager, login_user, logout_user, login_required, current_user
@@ -13,13 +11,6 @@ from flask import session
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'
-# app.config['SQLALCHEMY_DATABASE_URI']
-
-# db = SQLAlchemy(app)
-
-# try make migrations to the db
-# migrate = Migrate(app, db)
-
 
 # Flask-Login Configuration
 login_manager = LoginManager(app)
@@ -35,7 +26,6 @@ def load_user(user_id):
 def index():
     return render_template('index.html')
 
-
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
@@ -49,7 +39,6 @@ def register():
         return redirect('/login')
     return render_template('register.html')
 
-
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
@@ -57,8 +46,6 @@ def login():
         password = request.form['password']
         print(username)
         user = DBStorage.authenticate_user(DBStorage(), username, password)
-
-
         if user:
             login_user(user)
             flash('Logged in successfully!', 'success')
@@ -74,30 +61,23 @@ def dashboard():
     db_storage = DBStorage()
     properties = db_storage.all_properties()
 
-    print(properties)
-    
     return render_template('dashboard.html', properties=properties)
-
 
 @app.route('/logout')
 def logout():
     logout_user()
     return redirect('/')
 
-
 @app.route('/profile')
 @login_required
 def profile():
-    
     user_id = current_user.id
     username = current_user.username
     email = current_user.email
     
     return render_template('profile.html', user_id=user_id, username=username, email=email)
 
-
 @app.route('/create_property', methods=['GET', 'POST'])
-
 def create_property():
     if request.method == 'POST':
         name = request.form['name']
@@ -140,7 +120,6 @@ def create_property():
         else:
             flash('Error creating the property')
     return render_template('create_property.html')
-
 
 @app.route('/review', methods=['POST', 'GET'])
 @login_required

@@ -2,7 +2,6 @@
 """
 Database engine
 """
-
 # from .base_model import Base
 import os
 from sqlalchemy import create_engine, MetaData
@@ -11,9 +10,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from dotenv import load_dotenv
 # from .property import Property
 from hashlib import md5
-
 Base = declarative_base()
-
 
 class DBStorage:
     """
@@ -39,9 +36,7 @@ class DBStorage:
         """
             creates the engine self.__engine
         """
-
         load_dotenv()
-
         self.__engine = create_engine(
             'mysql+mysqldb://{}:{}@{}/{}'.format(
                 os.getenv('MYSQL_USER'),
@@ -160,6 +155,16 @@ class DBStorage:
             obj_ref = f"{type(prop).__name__}.{prop.id}"
             obj_dict[obj_ref] = prop
         return obj_dict
+    
+    def users(self):
+        """Dummy function for retreiving the Users"""
+        from .user import User
+        user_obj = {}
+        a_query = self.__session.query(User).all()
+        for user in a_query:
+            user_ref = f"{type(user).__name__}.{user.id}"
+            user_obj[user_ref] = user
+        return user_obj
 
     @staticmethod
     def authenticate_user(self, username, password):
